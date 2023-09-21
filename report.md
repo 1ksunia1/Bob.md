@@ -24,5 +24,26 @@ ORDER BY "name" DESC;
 ```
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/48341149-9067-47f0-9ab8-9110db68715f)
 
+## 3
+```sql
+SELECT "order_date", ("name" || ' (age:' || "age" || ')') AS person_information FROM "person_order"
+JOIN "person" ON "person_id" = person.id
+ORDER BY "order_date" ASC, "person_information" ASC;
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/203f6fad-a050-4093-89f3-c837964a3718)
+
+## 4
+```sql
+SELECT order_date, (name || ' (age:' || age || ')') AS person_information FROM person_order NATURAL JOIN person
+ORDER BY order_date ASC, person_information ASC;
+```
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/2fde21f9-4860-4d02-bf7c-dd8fbd6de1d8)
+
+
+
+
+
+
 
 
