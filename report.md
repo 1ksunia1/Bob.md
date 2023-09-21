@@ -62,6 +62,31 @@ ORDER BY "person_name", "pizza_name", "pizzeria_name";
 
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/b98186a6-0e9c-4201-8bd2-2b6f93c6ba15)
 
+## 20/09/23
+
+## 1
+
+```sql
+SELECT "name", "rating" FROM "pizzeria"
+LEFT JOIN "person_visits" ON "pizzeria_id" = pizzeria.id
+WHERE "pizzeria_id" IS NULL;
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/4d953492-3560-4b49-bc2d-702905a16896)
+
+## 2
+
+```sql
+SELECT missing_date::date FROM generate_series ('2022-01-01'::timestamp, '2022-01-10', '1 day') AS "missing_date"
+LEFT JOIN "person_visits" ON "visit_date" = "missing_date"
+WHERE "visit_date" IS NULL;
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/5ebae32a-1b8b-47b3-a7ef-670e2ddd3f70)
+
+
+
+
 
 
 
