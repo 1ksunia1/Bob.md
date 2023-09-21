@@ -51,6 +51,21 @@ WHERE id NOT IN
 
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/05a9c04b-62e3-4d84-a113-b0e215ef3752)
 
+## 6
+```sql
+SELECT person.name AS person_name, menu.pizza_name, pizzeria.name AS pizzeria_name FROM "person_order"
+JOIN "person" ON person.id = person_order.person_id
+LEFT JOIN "menu" ON menu.id = person_order.menu_id
+LEFT JOIN "pizzeria" ON pizzeria.id = menu.pizzeria_id
+ORDER BY "person_name", "pizza_name", "pizzeria_name";
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/b98186a6-0e9c-4201-8bd2-2b6f93c6ba15)
+
+
+
+
+
 
 
 
