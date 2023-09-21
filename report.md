@@ -1,3 +1,5 @@
+### 19/09/23
+
 ## 1
 ```sql
 SELECT person.id, person.name, "age", "gender", "address", pizzeria.id, pizzeria.name, "rating" FROM "person", "pizzeria"
@@ -39,6 +41,17 @@ SELECT order_date, (name || ' (age:' || age || ')') AS person_information FROM p
 ORDER BY order_date ASC, person_information ASC;
 ```
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/2fde21f9-4860-4d02-bf7c-dd8fbd6de1d8)
+
+## 5
+```sql
+SELECT name FROM pizzeria
+WHERE id NOT IN
+(SELECT pizzeria_id FROM person_visits);
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/05a9c04b-62e3-4d84-a113-b0e215ef3752)
+
+
 
 
 
