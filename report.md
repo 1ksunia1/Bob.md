@@ -98,6 +98,41 @@ ORDER BY 1, 2
 
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/d052780d-1473-47f3-ad93-3221d5826035)
 
+## 2
+
+```sql
+SELECT AVG(ord.quantity) AS average, prd.category FROM orders ord
+JOIN products prd ON prd.product_id = ord.product_id
+WHERE price >= 50
+GROUP BY prd.category
+ORDER BY 2
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/20e22f12-1ebb-4c10-9c87-1aee4c2253b8)
+
+## 3
+
+```sql
+WITH sum_customers AS (
+	SELECT ord.customer_id, SUM(prd.price) AS summa FROM orders ord
+	JOIN products prd ON prd.product_id = ord.product_id
+	GROUP BY ord.customer_id
+), avg_sum AS (
+	SELECT ord.order_id, ord.customer_id, ord.quantity, SUM(prd.price) AS summa FROM orders ord
+	JOIN products prd ON prd.product_id = ord.product_id
+	GROUP BY ord.order_id
+)
+
+SELECT cus.first_name, cus.last_name, cus.email FROM customers cus
+JOIN sum_customers scus ON scus.customer_id = cus.customer_id
+JOIN avg_sum asum ON asum.customer_id = cus.customer_id
+GROUP BY cus.first_name, cus.last_name, cus.email, scus.summa
+HAVING scus.summa > AVG(asum.summa)
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/ea49ca15-230e-4fbb-8307-4f909a3e6094)
+
+
 
 
 
