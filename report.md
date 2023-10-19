@@ -84,7 +84,7 @@ WHERE "visit_date" IS NULL;
 
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/5ebae32a-1b8b-47b3-a7ef-670e2ddd3f70)
 
-## 18.10.2023 КОНТРОЛЬНАЯ РАБОТА
+## 18.10.2023 
 
 
 
