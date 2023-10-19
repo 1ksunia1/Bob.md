@@ -132,6 +132,53 @@ HAVING scus.summa > AVG(asum.summa)
 
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/ea49ca15-230e-4fbb-8307-4f909a3e6094)
 
+## 4 
+
+```sql
+WITH sum_price AS (
+	SELECT ord.order_id, ord.customer_id, ord.product_id, ord.quantity, SUM(prd.price) AS summa FROM orders ord
+	JOIN products prd ON prd.product_id = ord.product_id
+	GROUP BY ord.order_id
+	HAVING SUM(prd.price) >= 1000
+)
+
+SELECT cus.first_name, cus.last_name FROM customers cus
+JOIN sum_price spr ON spr.customer_id = cus.customer_id
+JOIN products prd ON prd.product_id = spr.product_id
+WHERE category != 'Electronics'
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/793f3bea-47a1-4bf0-a822-1635e1ebb558)\
+
+## 5 
+
+```sql
+DROP VIEW IF EXISTS v_avg_order;
+
+CREATE VIEW v_avg_order AS (
+	WITH sum_order_id AS (
+		SELECT ord.order_id, ord.customer_id, ord.quantity, SUM(prd.price) AS summa FROM orders ord
+		JOIN products prd ON prd.product_id = ord.product_id
+		GROUP BY ord.order_id
+	), avg_sum_customer AS (
+		SELECT soid.customer_id, ROUND(AVG(soid.summa), 2) AS avg_summa FROM sum_order_id soid
+		GROUP BY soid.customer_id
+	), avg_all_sum AS (
+		SELECT ROUND(AVG(soid.summa), 2) AS avg_all FROM sum_order_id soid
+	)
+	
+	SELECT cus.first_name, cus.last_name, ascus.avg_summa, (ascus.avg_summa - (SELECT avg_all FROM avg_all_sum)) AS difference FROM avg_sum_customer ascus
+	JOIN customers cus ON cus.customer_id = ascus.customer_id
+	JOIN sum_order_id soid ON soid.customer_id = ascus.customer_id
+	GROUP BY cus.first_name, cus.last_name, ascus.avg_summa
+);
+
+SELECT * FROM v_avg_order
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/20ad1340-1f38-4203-a4b1-c7f5b2fc95cb)
+
+
 ## 17.10.2023
 
 ##1
