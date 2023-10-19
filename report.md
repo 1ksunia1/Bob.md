@@ -86,6 +86,20 @@ WHERE "visit_date" IS NULL;
 
 ## 18.10.2023 
 
+## 1
+
+```sql
+SELECT cus.first_name, cus.last_name FROM customers cus
+JOIN orders ord ON cus.customer_id = ord.customer_id
+GROUP BY cus.first_name, cus.last_name, ord.order_date
+HAVING COUNT(*) >= 2 AND ord.order_date BETWEEN '2023-07-17' AND '2023-10-17'
+ORDER BY 1, 2
+```
+
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/d052780d-1473-47f3-ad93-3221d5826035)
+
+
+
 
 
 
