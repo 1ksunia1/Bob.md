@@ -559,7 +559,8 @@ create table person_discounts
  constraint fk_person_discounts_person_id foreign key  (person_id) references person(id),
  constraint fk_person_discounts_pizzeria_id foreign key  (pizzeria_id) references pizzeria(id));
 ```
-![image](https://github.com/1ksunia1/Bob.md/assets/145553959/995ad044-cb90-4abe-a4e1-909f8004bc8c)
+![image](https://github.com/1ksunia1/Bob.md/assets/145553959/d3640ae1-a423-4e79-9357-cf6ac737f4f4)
+
 
 ## 2
 
