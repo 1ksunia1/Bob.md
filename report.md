@@ -898,6 +898,14 @@ SELECT fa.address, fa.formula, fa.average, (fa.formula>fa.average) AS comparison
 
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/245c9034-23be-4c17-a2c5-1f6028f4c5b1)
 
-
+create table profile
+( id bigint primary key ,
+  name varchar (11),
+  sername varchar (11),
+  email varchar (64),
+  phone number varchar (11),
+  roel_id INT,
+ constraint fk_roel_roel_id foreign key  (roel_id) references roel(id)
+);
 
 
