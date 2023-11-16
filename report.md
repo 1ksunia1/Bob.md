@@ -896,6 +896,200 @@ WITH formula_average AS (
 SELECT fa.address, fa.formula, fa.average, (fa.formula>fa.average) AS comparison FROM formula_average fa
 ```
 
+
+
+
+create table category
+( id bigint primary key ,
+  tittle text
+);
+
+INSERT INTO category (id, title)
+VALUES
+  (1, 'Makeup'),
+  (2, 'Nails'),
+  (3, 'Brows'),
+  (4, 'Lips'),
+  (5, 'Eyelashes');
+
+
+
+
+
+
+create table roel
+( id bigint primary key ,
+  tittle text
+);
+
+INSERT INTO roel (id) VALUES (1);
+
+
+
+
+
+
+create table users
+( id bigint primary key ,
+  username varchar(10),
+  email varchar(64),
+  password varchar(8)
+);
+
+INSERT INTO users (id, username, email, password)
+VALUES
+  (1, 'Unaali', 'grejeilecoita-7145@yopmail.com', 'KONvqKhB' ),
+  (2, 'Ffaelanto', 'faummafougude-3813@yopmail.com', 'PchHBwsM'),
+  (3, 'Saimossi', 'vaprimmeitrabre-6143@yopmail.com', '29TEr8jr'),
+  (4, 'Gideemaho', 'proboujuprisso-4293@yopmail.com', 'TNNghEat'),
+  (5, 'Zayina', 'siwosselleiri-6305@yopmail.com', 'yTPeeWBL');
+
+
+
+
+
+
+create table profile
+( id bigint primary key ,
+  name varchar(11),
+  sername varchar(11),
+  email varchar(64),
+  phone_number varchar (11),
+  roel_id INT,
+  constraint fk_roel_roel_id FOREIGN KEY (roel_id) references roel(id) 
+);
+
+INSERT INTO profile (id, name, sername, phone_number, email, roel_id)
+VALUES
+  (1, 'Marvin', 'Taylor', '89246374935', 'grejeilecoita-7145@yopmail.com', 1),
+  (2, 'Robert', 'Gutierrez', '89132280405', 'faummafougude-3813@yopmail.com', 1),
+  (3, 'Marion', 'Thomas', '83648392744', 'vaprimmeitrabre-6143@yopmail.com', 1),
+  (4, 'Bonnie', 'Harvey', '93648203846', 'proboujuprisso-4293@yopmail.com', 1),
+  (5, 'Pamela', 'Hudson', '83648293746', 'siwosselleiri-6305@yopmail.com', 1);
+
+
+
+
+
+
+create table sales
+( id bigint primary key ,
+  tittle text,
+  costs text
+);
+
+INSERT INTO sales (id, tittle, costs)
+VALUES
+  (1, 'Pay less, buy more', 'big'),
+  (2, 'Dont overpay!', 'big'),
+  (3, 'Down with overpayments', 'big'),
+  (4, 'Promotions every day', 'big'),
+  (5, 'Dreams will come true', 'big');
+
+
+
+
+
+
+create table sales_products
+( id bigint primary key ,
+  sales_id INT,
+  price_list_id INT,
+  constraint fk_sales_sales_id FOREIGN KEY (sales_id) references sales(id),
+  constraint fk_price_list_price_list_id FOREIGN KEY (price_list_id) references price_list(id) 
+);
+
+INSERT INTO sales_products (id, sales_id, price_list_id)
+VALUES
+  (1, '1', '1'),
+  (2, '2', '2'),
+  (3, '3', '3'),
+  (4, '4', '4'),
+  (5, '5', '5');
+
+
+
+
+
+create table price_list
+( id bigint primary key ,
+  sales_id INT,
+  category_id INT,
+  description text,
+  constraint fk_sales_sales_id FOREIGN KEY (sales_id) references sales(id),
+  constraint fk_category_category_id FOREIGN KEY (category_id) references category(id)
+);
+
+
+INSERT INTO price_list (id, sales_id, category_id, description)
+VALUES
+  (1, '1', '1', 'Significant savings'),
+  (2, '2', '2', 'Huge savings!'),
+  (3, '3', '3', 'Our prices are good'),
+  (4, '4', '4', 'Secret sale'),
+  (5, '5', '5', 'Impossible to resist');
+
+
+
+
+
+create table records
+( id bigint primary key ,
+  Date date,
+  staff_id INT,
+  client_id INT,
+  price_list_id INT,
+  constraint fk_staff_staff_id FOREIGN KEY (staff_id) references staff(id),
+  constraint fk_price_list_price_list_id FOREIGN KEY (price_list_id) references price_list(id), 
+  constraint fk_client_client_id FOREIGN KEY (client_id) references client(id)
+);
+
+INSERT INTO records (id, Date, staff_id, client_id, price_list_id)
+VALUES
+  (1, '01.01.2024', '1', '1', '1'),
+  (2, '30.07.2024', '2', '2', '2'),
+  (3, '07.03.2024', '3', '3', '3'),
+  (4, '28.01.2024', '4', '4', '4'),
+  (5, '15.07.2024', '5', '5', '5');
+
+
+
+
+
+create table client
+( id bigint primary key ,
+  name varchar(11),
+  username varchar(10),
+  email varchar(64)
+);
+
+INSERT INTO client (id, name, email, username)
+VALUES
+  (1, 'Marvin', 'grejeilecoita-7145@yopmail.com', 'Freyna' ),
+  (2, 'Robert', 'faummafougude-3813@yopmail.com', 'Quiniya'),
+  (3, 'Marion', 'vaprimmeitrabre-6143@yopmail.com', 'Niaboda'),
+  (4, 'Bonnie', 'proboujuprisso-4293@yopmail.com', 'Tuarianell'),
+  (5, 'Pamela', 'siwosselleiri-6305@yopmail.com', 'Gazellani');
+
+
+
+
+
+create table staff
+( id bigint primary key ,
+  name varchar(11),
+  tittle text,
+  phone_number varchar (11)
+);
+
+
+INSERT INTO staff (id, name, tittle, phone_number)
+VALUES
+  (1, 'Jennifer', 'manicurist', '747483738' ),
+  (2, 'Barbara', 'eyelasist', '39379427'),
+  (3, 'Karen', 'eyebrowist', '823482234'),
+  (4, 'Amber', 'cosmetologist', '28863424'),
+  (5, 'Diane', 'visagiste', '8545475859');
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/245c9034-23be-4c17-a2c5-1f6028f4c5b1)
 
 
