@@ -911,7 +911,14 @@ VALUES
   (3, 'Brows'),
   (4, 'Lips'),
   (5, 'Eyelashes');
-
+CREATE TRIGGER prevent_delete_category
+BEFORE DELETE ON category
+FOR EACH ROW
+BEGIN
+    IF EXISTS (SELECT 1 FROM other_table WHERE category_id = OLD.id) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Невозможно удалить категорию, так как есть связанные записи';
+    END IF;
+END;
 
 
 
@@ -924,6 +931,12 @@ create table roel
 
 INSERT INTO roel (id) VALUES (1);
 
+CREATE TRIGGER insert_default_tittle
+BEFORE INSERT ON roel
+FOR EACH ROW
+BEGIN
+    SET NEW.tittle = 'Default Tittle';
+END;
 
 
 
@@ -944,9 +957,21 @@ VALUES
   (4, 'Gideemaho', 'proboujuprisso-4293@yopmail.com', 'TNNghEat'),
   (5, 'Zayina', 'siwosselleiri-6305@yopmail.com', 'yTPeeWBL');
 
+CREATE TRIGGER check_username_uniqueness
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+    IF EXISTS (SELECT 1 FROM users WHERE username = NEW.username) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Пользователь с таким именем пользователя уже существует';
+    END IF;
+END;
 
-
-
+CREATE TRIGGER encrypt_password
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+    SET NEW.password = MD5(NEW.password);
+END;
 
 
 create table profile
@@ -1074,7 +1099,6 @@ VALUES
 
 
 
-
 create table staff
 ( id bigint primary key ,
   name varchar(11),
@@ -1090,6 +1114,43 @@ VALUES
   (3, 'Karen', 'eyebrowist', '823482234'),
   (4, 'Amber', 'cosmetologist', '28863424'),
   (5, 'Diane', 'visagiste', '8545475859');
+
+  CREATE FUNCTION validate_phone_number(phone VARCHAR(11)) RETURNS BOOLEAN
+BEGIN
+    DECLARE valid BOOLEAN DEFAULT TRUE;
+
+    -- Здесь можно добавить дополнительные проверки формата номера телефона
+    -- В данном примере, мы проверяем, что строка состоит только из цифр.
+    SET valid = phone REGEXP '^[0-9]+$';
+
+    RETURN valid;
+END;
+
+DELIMITER //
+
+CREATE TRIGGER before_insert_update_staff
+BEFORE INSERT OR UPDATE ON staff
+FOR EACH ROW
+BEGIN
+    DECLARE phone_valid BOOLEAN;
+
+    -- Проверка длины строки в поле phone_number
+    IF LENGTH(NEW.phone_number) <> 11 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid phone_number length';
+    END IF;
+
+    -- Проверка формата номера телефона 
+    SET phone_valid = validate_phone_number(NEW.phone_number);
+    IF NOT phone_valid THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid phone_number format';
+    END IF;
+END;
+
+//
+
+DELIMITER ;
 ![image](https://github.com/1ksunia1/Bob.md/assets/145553959/245c9034-23be-4c17-a2c5-1f6028f4c5b1)
 
 
