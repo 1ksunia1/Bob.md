@@ -1,0 +1,247 @@
+-- Создание таблицы category
+CREATE TABLE category (
+    id BIGINT PRIMARY KEY,
+    title TEXT
+);
+
+INSERT INTO category (id, title)
+VALUES
+    (1, 'Makeup'),
+    (2, 'Nails'),
+    (3, 'Brows'),
+    (4, 'Lips'),
+    (5, 'Eyelashes');
+
+-- Триггер для предотвращения удаления категории, если есть связанные записи
+CREATE TRIGGER prevent_delete_category
+BEFORE DELETE ON category
+FOR EACH ROW
+BEGIN
+    IF EXISTS (SELECT 1 FROM other_table WHERE category_id = OLD.id) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Невозможно удалить категорию, так как есть связанные записи';
+    END IF;
+END;
+
+-- Создание таблицы role
+CREATE TABLE role (
+    id BIGINT PRIMARY KEY,
+    title TEXT
+);
+
+INSERT INTO role (id, title)
+VALUES (1, 'Default Title');
+
+-- Триггер для установки значения по умолчанию при вставке в role
+CREATE TRIGGER insert_default_title
+BEFORE INSERT ON role
+FOR EACH ROW
+BEGIN
+    IF NEW.title IS NULL THEN
+        SET NEW.title = 'Default Title';
+    END IF;
+END;
+
+-- Создание таблицы users
+CREATE TABLE users (
+    id BIGINT PRIMARY KEY,
+    username VARCHAR(10),
+    email VARCHAR(64),
+    password VARCHAR(32) -- Хранение хэша пароля (MD5)
+);
+
+INSERT INTO users (id, username, email, password)
+VALUES
+    (1, 'Unaali', 'grejeilecoita-7145@yopmail.com', MD5('KONvqKhB')),
+    (2, 'Ffaelanto', 'faummafougude-3813@yopmail.com', MD5('PchHBwsM')),
+    (3, 'Saimossi', 'vaprimmeitrabre-6143@yopmail.com', MD5('29TEr8jr')),
+    (4, 'Gideemaho', 'proboujuprisso-4293@yopmail.com', MD5('TNNghEat')),
+    (5, 'Zayina', 'siwosselleiri-6305@yopmail.com', MD5('yTPeeWBL'));
+
+-- Триггер для проверки уникальности имени пользователя
+CREATE TRIGGER check_username_uniqueness
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+    IF EXISTS (SELECT 1 FROM users WHERE username = NEW.username) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Пользователь с таким именем пользователя уже существует';
+    END IF;
+END;
+
+-- Триггер для шифрования пароля перед вставкой в users
+CREATE TRIGGER encrypt_password
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+    SET NEW.password = MD5(NEW.password);
+END;
+
+-- Создание таблицы profile
+CREATE TABLE profile (
+    id BIGINT PRIMARY KEY,
+    name VARCHAR(11),
+    surname VARCHAR(11),
+    email VARCHAR(64),
+    phone_number VARCHAR(11),
+    role_id INT,
+    CONSTRAINT fk_role_role_id FOREIGN KEY (role_id) REFERENCES role(id)
+);
+
+INSERT INTO profile (id, name, surname, phone_number, email, role_id)
+VALUES
+    (1, 'Marvin', 'Taylor', '89246374935', 'grejeilecoita-7145@yopmail.com', 1),
+    (2, 'Robert', 'Gutierrez', '89132280405', 'faummafougude-3813@yopmail.com', 1),
+    (3, 'Marion', 'Thomas', '83648392744', 'vaprimmeitrabre-6143@yopmail.com', 1),
+    (4, 'Bonnie', 'Harvey', '93648203846', 'proboujuprisso-4293@yopmail.com', 1),
+    (5, 'Pamela', 'Hudson', '83648293746', 'siwosselleiri-6305@yopmail.com', 1);
+
+create table sales
+( id bigint primary key ,
+  tittle text,
+  costs text
+);
+
+INSERT INTO sales (id, tittle, costs)
+VALUES
+  (1, 'Pay less, buy more', 'big'),
+  (2, 'Dont overpay!', 'big'),
+  (3, 'Down with overpayments', 'big'),
+  (4, 'Promotions every day', 'big'),
+  (5, 'Dreams will come true', 'big');
+
+
+create table sales_products
+( id bigint primary key ,
+  sales_id INT,
+  price_list_id INT,
+  constraint fk_sales_sales_id FOREIGN KEY (sales_id) references sales(id),
+  constraint fk_price_list_price_list_id FOREIGN KEY (price_list_id) references price_list(id) 
+);
+
+INSERT INTO sales_products (id, sales_id, price_list_id)
+VALUES
+  (1, '1', '1'),
+  (2, '2', '2'),
+  (3, '3', '3'),
+  (4, '4', '4'),
+  (5, '5', '5');
+
+
+
+
+
+create table price_list
+( id bigint primary key ,
+  sales_id INT,
+  category_id INT,
+  description text,
+  constraint fk_sales_sales_id FOREIGN KEY (sales_id) references sales(id),
+  constraint fk_category_category_id FOREIGN KEY (category_id) references category(id)
+);
+
+
+INSERT INTO price_list (id, sales_id, category_id, description)
+VALUES
+  (1, '1', '1', 'Significant savings'),
+  (2, '2', '2', 'Huge savings!'),
+  (3, '3', '3', 'Our prices are good'),
+  (4, '4', '4', 'Secret sale'),
+  (5, '5', '5', 'Impossible to resist');
+
+
+
+
+
+create table records
+( id bigint primary key ,
+  Date date,
+  staff_id INT,
+  client_id INT,
+  price_list_id INT,
+  constraint fk_staff_staff_id FOREIGN KEY (staff_id) references staff(id),
+  constraint fk_price_list_price_list_id FOREIGN KEY (price_list_id) references price_list(id), 
+  constraint fk_client_client_id FOREIGN KEY (client_id) references client(id)
+);
+
+INSERT INTO records (id, Date, staff_id, client_id, price_list_id)
+VALUES
+  (1, '01.01.2024', '1', '1', '1'),
+  (2, '30.07.2024', '2', '2', '2'),
+  (3, '07.03.2024', '3', '3', '3'),
+  (4, '28.01.2024', '4', '4', '4'),
+  (5, '15.07.2024', '5', '5', '5');
+
+
+
+
+
+create table client
+( id bigint primary key ,
+  name varchar(11),
+  username varchar(10),
+  email varchar(64)
+);
+
+INSERT INTO client (id, name, email, username)
+VALUES
+  (1, 'Marvin', 'grejeilecoita-7145@yopmail.com', 'Freyna' ),
+  (2, 'Robert', 'faummafougude-3813@yopmail.com', 'Quiniya'),
+  (3, 'Marion', 'vaprimmeitrabre-6143@yopmail.com', 'Niaboda'),
+  (4, 'Bonnie', 'proboujuprisso-4293@yopmail.com', 'Tuarianell'),
+  (5, 'Pamela', 'siwosselleiri-6305@yopmail.com', 'Gazellani');
+
+
+
+
+create table staff
+( id bigint primary key ,
+  name varchar(11),
+  tittle text,
+  phone_number varchar (11)
+);
+
+
+INSERT INTO staff (id, name, tittle, phone_number)
+VALUES
+  (1, 'Jennifer', 'manicurist', '747483738' ),
+  (2, 'Barbara', 'eyelasist', '39379427'),
+  (3, 'Karen', 'eyebrowist', '823482234'),
+  (4, 'Amber', 'cosmetologist', '28863424'),
+  (5, 'Diane', 'visagiste', '8545475859')
+-- Добавим функцию для проверки формата номера телефона
+CREATE FUNCTION validate_phone_number(phone VARCHAR(11)) RETURNS BOOLEAN
+BEGIN
+    DECLARE valid BOOLEAN DEFAULT TRUE;
+
+    -- Здесь можно добавить дополнительные проверки формата номера телефона
+    -- В данном примере, мы проверяем, что строка состоит только из цифр.
+    SET valid = phone REGEXP '^[0-9]+$';
+
+    RETURN valid;
+END;
+
+DELIMITER //
+
+-- Добавим триггер перед вставкой и обновлением в staff
+CREATE TRIGGER before_insert_update_staff
+BEFORE INSERT OR UPDATE ON staff
+FOR EACH ROW
+BEGIN
+    DECLARE phone_valid BOOLEAN;
+
+    -- Проверка длины строки в поле phone_number
+    IF LENGTH(NEW.phone_number) <> 11 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid phone_number length';
+    END IF;
+
+    -- Проверка формата номера телефона
+    SET phone_valid = validate_phone_number(NEW.phone_number);
+    IF NOT phone_valid THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid phone_number format';
+    END IF;
+END;
+
+//
+
+DELIMITER ;
+
+https://app.diagrams.net/#H1ksunia1%2FBob.md%2Fmain%2F%D0%B4%D0%B8%D0%B0%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B0.drawio
